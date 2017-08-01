@@ -1,12 +1,13 @@
 from conans import ConanFile, CMake
 import os
 
+channel = os.getenv("CONAN_CHANNEL", "testing")
+username = os.getenv("CONAN_USERNAME", "ebclark2")
+
 class LibgeohashTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
+    requires = "Libgeohash/0.1@%s/%s" % (username, channel)
     generators = "cmake"
-
-    def configure(self):
-        self.requires("Libgeohash/0.1@demo/testing")
 
     def build(self):
         cmake = CMake(self)
