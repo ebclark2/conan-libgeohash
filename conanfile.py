@@ -4,8 +4,8 @@ from conans import ConanFile, CMake, tools
 class LibgeohashConan(ConanFile):
     name = "Libgeohash"
     version = "0.1"
-    license = "<Put the package license here>"
-    url = "<Package recipe repository url here, for issues about the package>"
+    license = "https://github.com/simplegeo/libgeohash/blob/master/LICENSE"
+    url = "https://github.com/ebclark2/conan-libgeohash.git"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
 
