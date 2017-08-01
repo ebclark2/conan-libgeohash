@@ -1,0 +1,11 @@
+set(LIBGEOHASH_LIBRARY_NAME geohash)
+
+set(SOURCES
+	libgeohash/geohash.c
+)
+add_library(${LIBGEOHASH_LIBRARY_NAME} ${SOURCES})
+set_target_properties(${LIBGEOHASH_LIBRARY_NAME} PROPERTIES
+	PUBLIC_HEADER libgeohash/geohash.h)
+install(TARGETS ${LIBGEOHASH_LIBRARY_NAME}
+	ARCHIVE DESTINATION lib
+	PUBLIC_HEADER DESTINATION include)
