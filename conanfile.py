@@ -32,6 +32,7 @@ class LibgeohashConan(ConanFile):
         self.run("%s && cmake --build . --target install %s" % (cd_build, cmake.build_config))
 
     def package(self):
+        self.copy("license*", dst="licenses",  ignore_case=True, keep_path=False)
         self.copy("*", dst=".", src=self.INSTALL_DIR)
 
     def package_info(self):
