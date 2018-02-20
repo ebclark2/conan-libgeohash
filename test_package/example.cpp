@@ -22,7 +22,7 @@ int main() {
   std::cout<<std::fixed<<"Decoded geohash.Latitude="<<std::setprecision(10)
            <<g.latitude<<" Longitude="<<g.longitude<<std::endl;
 
-  if (!AreSame(g.latitude, lat) or !AreSame(g.longitude,lng)) {
+  if (!AreSame(g.latitude, lat) || !AreSame(g.longitude,lng)) {
     throw std::runtime_error("Decoded latitude and longitude doesn't match");
   }
   return 0;

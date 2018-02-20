@@ -16,8 +16,6 @@ class LibgeohashConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
-        if self.settings.os == "Windows":
-            raise ConanException("Windows not supported")
 
     def source(self):
         self.run("git clone https://github.com/simplegeo/libgeohash.git")
