@@ -5,15 +5,14 @@ from conans.errors import ConanException
 class LibgeohashConan(ConanFile):
     name = "Libgeohash"
     version = "0.1"
-    license = "https://github.com/simplegeo/libgeohash/blob/master/LICENSE"
+    license = "BSD-3"
+    homepage = "https://github.com/simplegeo/libgeohash"
     url = "https://github.com/ebclark2/conan-libgeohash.git"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = "shared=False", "fPIC=False"
-    exports = ["CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake"]
+    options = {"shared": [True, False]}
+    default_options = "shared=False",
+    exports = "CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake"
     generators = "cmake"
-
-    INSTALL_DIR = "_install"
 
     def configure(self):
         del self.settings.compiler.libcxx
@@ -25,23 +24,22 @@ class LibgeohashConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        self.run("mkdir _build")
-        cd_build = "cd _build"
-        CMAKE_OPTIONALS = ""
-        if self.options.fPIC:
-            c_flags.append("-fPIC")
-        self.run("%s && cmake .. -DCMAKE_INSTALL_PREFIX=../%s %s %s" % (cd_build, self.INSTALL_DIR, cmake.command_line, CMAKE_OPTIONALS))
-        self.run("%s && cmake --build . %s" % (cd_build, cmake.build_config))
-        self.run("%s && cmake --build . --target install %s" % (cd_build, cmake.build_config))
+        if self.options.shared and self.settings.os != "Windows":
+            cmake.definitions["CONAN_CXX_FLAGS"] = "-fPIC"
+            cmake.definitions["CONAN_C_FLAGS"] = "-fPIC"
+        cmake.configure()
+        cmake.build()
 
     def package(self):
-        self.copy("license*", dst="licenses",  ignore_case=True, keep_path=False)
-        self.copy("*.h", dst="include", src="hello")
-        self.copy("*geohash.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
+        self.copy("license*", dst="licenses", ignore_case=True, keep_path=False)
+        self.copy("*.h", dst="include", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
+        self.copy("*geohash.lib", dst="lib", keep_path=False)
+
+        if self.options.shared:
+            self.copy("*.dll", dst="bin", keep_path=False)
+            self.copy("*.so", dst="lib", keep_path=False)
+            self.copy("*.dylib", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["geohash"]
