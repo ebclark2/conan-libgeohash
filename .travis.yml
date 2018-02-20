@@ -3,7 +3,6 @@ env:
    global:
      - CONAN_REFERENCE: "Libgeohash/2469d3c"
      - CONAN_USERNAME: "ebclark2"
-     - CONAN_LOGIN_USERNAME: "ebclark2"
      - CONAN_CHANNEL: "testing"
      - CONAN_DOCKER_32_IMAGES: 1 # Enable docker 32 bits images for the builds with arch=x86
      
