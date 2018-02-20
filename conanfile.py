@@ -4,7 +4,7 @@ from conans.errors import ConanException
 
 class LibgeohashConan(ConanFile):
     name = "Libgeohash"
-    version = "0.1"
+    version = "2469d3c"
     license = "BSD-3"
     homepage = "https://github.com/simplegeo/libgeohash"
     url = "https://github.com/ebclark2/conan-libgeohash.git"
@@ -21,6 +21,7 @@ class LibgeohashConan(ConanFile):
 
     def source(self):
         self.run("git clone https://github.com/simplegeo/libgeohash.git")
+        self.run("cd libgeohash && git checkout -q %s" % self.version)
 
     def build(self):
         cmake = CMake(self)
