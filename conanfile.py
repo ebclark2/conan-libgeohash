@@ -1,5 +1,4 @@
 from conans import ConanFile, CMake
-from conans.errors import ConanException
 
 
 class LibgeohashConan(ConanFile):
