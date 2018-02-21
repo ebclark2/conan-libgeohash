@@ -8,8 +8,8 @@ class LibgeohashConan(ConanFile):
     homepage = "https://github.com/simplegeo/libgeohash"
     url = "https://github.com/ebclark2/conan-libgeohash.git"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False",
+    options = {"fPIC": [True, False]}
+    default_options = "fPIC=False"
     exports = "CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake"
     generators = "cmake"
 
@@ -22,7 +22,7 @@ class LibgeohashConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        if self.options.shared and self.settings.os != "Windows":
+        if self.options.fPIC and self.settings.os != "Windows":
             cmake.definitions["CONAN_CXX_FLAGS"] = "-fPIC"
             cmake.definitions["CONAN_C_FLAGS"] = "-fPIC"
         cmake.configure()
@@ -34,10 +34,10 @@ class LibgeohashConan(ConanFile):
         self.copy("*.a", dst="lib", keep_path=False)
         self.copy("*geohash.lib", dst="lib", keep_path=False)
 
-        if self.options.shared:
-            self.copy("*.dll", dst="bin", keep_path=False)
-            self.copy("*.so", dst="lib", keep_path=False)
-            self.copy("*.dylib", dst="lib", keep_path=False)
+        # Library is only building in static but keeping it in case it's added shared is added later
+        self.copy("*.dll", dst="bin", keep_path=False)
+        self.copy("*.so", dst="lib", keep_path=False)
+        self.copy("*.dylib", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["geohash"]

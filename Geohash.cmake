@@ -4,11 +4,6 @@ set(SOURCES
 	libgeohash/geohash.c
 )
 
-OPTION(BUILD_SHARED_LIBS "Build package with shared libraries." ON)
-IF(NOT BUILD_SHARED_LIBS)
-  SET(LINK_SEARCH_START_STATIC TRUE)
-ENDIF(NOT BUILD_SHARED_LIBS)
-
 add_library(${LIBGEOHASH_LIBRARY_NAME} ${SOURCES})
 set_target_properties(${LIBGEOHASH_LIBRARY_NAME} PROPERTIES
 	PUBLIC_HEADER libgeohash/geohash.h)

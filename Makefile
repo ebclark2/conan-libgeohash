@@ -1,2 +1,2 @@
 all:
-	conan create ebclark2/testing
+	conan create . ebclark2/testing
