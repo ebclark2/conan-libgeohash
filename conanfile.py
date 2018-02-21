@@ -16,6 +16,8 @@ class LibgeohashConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
+        if self.settings.os == "Windows":
+            del self.options.fPIC
 
     def source(self):
         self.run("git clone https://github.com/simplegeo/libgeohash.git")
@@ -23,7 +25,7 @@ class LibgeohashConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        if self.settings.compiler != 'Visual Studio':
+        if self.settings.os != "Windows":
             cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
         cmake.configure()
         cmake.build()
