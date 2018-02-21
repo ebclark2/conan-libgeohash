@@ -7,6 +7,7 @@ class LibgeohashConan(ConanFile):
     license = "BSD-3"
     homepage = "https://github.com/simplegeo/libgeohash"
     url = "https://github.com/ebclark2/conan-libgeohash.git"
+    description = "A pure C implementation of the Geohash algorithm. http://geohash.org"
     settings = "os", "compiler", "build_type", "arch"
     options = {"fPIC": [True, False]}
     default_options = "fPIC=False"
