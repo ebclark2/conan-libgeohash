@@ -5,6 +5,7 @@ env:
      - CONAN_USERNAME: "ebclark2"
      - CONAN_CHANNEL: "testing"
      - CONAN_DOCKER_32_IMAGES: 1 # Enable docker 32 bits images for the builds with arch=x86
+     - CONAN_STABLE_BRANCH_PATTERN: "stable/*"
      
 linux: &linux
    os: linux
