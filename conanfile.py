@@ -10,7 +10,7 @@ class LibgeohashConan(ConanFile):
     description = "A pure C implementation of the Geohash algorithm. http://geohash.org"
     settings = "os", "compiler", "build_type", "arch"
     options = {"fPIC": [True, False]}
-    default_options = "fPIC=False"
+    default_options = "fPIC=True"
     exports = "CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake"
     generators = "cmake"
 
@@ -23,9 +23,8 @@ class LibgeohashConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        if self.options.fPIC and self.settings.os != "Windows":
-            cmake.definitions["CONAN_CXX_FLAGS"] = "-fPIC"
-            cmake.definitions["CONAN_C_FLAGS"] = "-fPIC"
+        if self.settings.compiler != 'Visual Studio':
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
         cmake.configure()
         cmake.build()
 
