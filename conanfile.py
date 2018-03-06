@@ -11,7 +11,7 @@ class LibgeohashConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"fPIC": [True, False]}
     default_options = "fPIC=True"
-    exports = "CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake"
+    exports = "CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake", "LICENSE.md"
     generators = "cmake"
 
     def configure(self):
@@ -31,16 +31,12 @@ class LibgeohashConan(ConanFile):
         cmake.build()
 
     def package(self):
+        self.copy(pattern="*LICENSE*", dst="licenses", keep_path=False)
         self.copy("FindLibgeohash.cmake", ".", ".")
         self.copy("license*", dst="licenses", ignore_case=True, keep_path=False)
         self.copy("*.h", dst="include", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
         self.copy("*geohash.lib", dst="lib", keep_path=False)
-
-        # Library is only building in static but keeping it in case it's added shared is added later
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["geohash"]
