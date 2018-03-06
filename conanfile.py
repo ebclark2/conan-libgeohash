@@ -1,39 +1,42 @@
-from conans import ConanFile, CMake, tools
+from conans import ConanFile, CMake
 
 
 class LibgeohashConan(ConanFile):
     name = "Libgeohash"
-    version = "0.1"
-    license = "https://github.com/simplegeo/libgeohash/blob/master/LICENSE"
+    version = "2469d3c"
+    license = "BSD-3"
+    homepage = "https://github.com/simplegeo/libgeohash"
     url = "https://github.com/ebclark2/conan-libgeohash.git"
+    description = "A pure C implementation of the Geohash algorithm. http://geohash.org"
     settings = "os", "compiler", "build_type", "arch"
     options = {"fPIC": [True, False]}
-    default_options = "fPIC=False"
-    exports = ["CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake"]
+    default_options = "fPIC=True"
+    exports = "CMakeLists.txt", "Geohash.cmake", "FindLibgeohash.cmake", "LICENSE.md"
     generators = "cmake"
 
-    INSTALL_DIR = "_install"
-
     def configure(self):
+        del self.settings.compiler.libcxx
         if self.settings.os == "Windows":
-            raise ConanException("Windows not supported")
+            del self.options.fPIC
+
     def source(self):
         self.run("git clone https://github.com/simplegeo/libgeohash.git")
+        self.run("cd libgeohash && git checkout -q %s" % self.version)
 
     def build(self):
-        cmake = CMake(self.settings)
-        self.run("mkdir _build")
-        cd_build = "cd _build"
-        CMAKE_OPTIONALS = ""
-        if self.options.fPIC:
-            c_flags.append("-fPIC")
-        self.run("%s && cmake .. -DCMAKE_INSTALL_PREFIX=../%s %s %s" % (cd_build, self.INSTALL_DIR, cmake.command_line, CMAKE_OPTIONALS))
-        self.run("%s && cmake --build . %s" % (cd_build, cmake.build_config))
-        self.run("%s && cmake --build . --target install %s" % (cd_build, cmake.build_config))
+        cmake = CMake(self)
+        if self.settings.os != "Windows":
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
+        cmake.configure()
+        cmake.build()
 
     def package(self):
-        self.copy("license*", dst="licenses",  ignore_case=True, keep_path=False)
-        self.copy("*", dst=".", src=self.INSTALL_DIR)
+        self.copy(pattern="*LICENSE*", dst="licenses", keep_path=False)
+        self.copy("FindLibgeohash.cmake", ".", ".")
+        self.copy("license*", dst="licenses", ignore_case=True, keep_path=False)
+        self.copy("*.h", dst="include", keep_path=False)
+        self.copy("*.a", dst="lib", keep_path=False)
+        self.copy("*geohash.lib", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["geohash"]
